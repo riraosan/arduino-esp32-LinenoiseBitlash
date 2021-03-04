@@ -18,24 +18,23 @@
 // limitations under the License.
 //
 
-
 #include <Console.h>
 #include <bitlash.h>
 
 extern void addBitlashFunction(const char *name, bitlash_function func_ptr);
 numvar termset_func(void);
 
+class LinenoiseBitlash : public Console
+{
+public:
+  // LinenoiseBitlash(): Console() {
+  //
+  //  }
 
-class LinenoiseBitlash: public Console {
- public:
-  
- // LinenoiseBitlash(): Console() {
- //   
- //  }
+  void begin(int baud, String p, int hlen)
+  {
 
-  void begin(int baud, String p, int hlen) {
-
-    Console::begin( baud, p, hlen) ;
+    Console::begin(baud, p, hlen);
     initBitlash(baud);
     addFunction("termset", (bitlash_function)termset_func);
     addFunction("ts", (bitlash_function)termset_func);
@@ -43,24 +42,26 @@ class LinenoiseBitlash: public Console {
 
   // will be executed by Console::consoleTaskStart()
   // 'virtual' is important for that to be
-  virtual void consoleTask() {
+  virtual void consoleTask()
+  {
     char *line;
-    for(;;){
-      if((line = lineNoise()) != NULL) {
-	historyAdd(line);
-	//printf("LinenoiseBitlash! You wrote: %s\n",line);
-	doCommand(line);
-	freeLine(line);
-      } 
+    for (;;)
+    {
+      if ((line = lineNoise()) != NULL)
+      {
+        historyAdd(line);
+        //printf("LinenoiseBitlash! You wrote: %s\n",line);
+        doCommand(line);
+        freeLine(line);
+      }
     }
-  }    
+  }
 
-  void addFunction(const char * func_name, bitlash_function func) {
+  void addFunction(const char *func_name, bitlash_function func)
+  {
 
     addBitlashFunction(func_name, func);
   }
 };
 
-
-
-#endif  //#ifndef LINENOISEBITLASH_H
+#endif //#ifndef LINENOISEBITLASH_H
